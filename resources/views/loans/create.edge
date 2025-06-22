@@ -1,0 +1,173 @@
+@layout.app({ title: "Form Peminjaman Buku" })
+
+@slot('content')
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-10 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md mx-auto">
+    <!-- Card Container -->
+    <div class="bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-700/50 transition-all duration-300 hover:shadow-purple-500/10">
+      <!-- Card Header -->
+      <div class="bg-gradient-to-r from-purple-900 to-indigo-800 p-6 border-b border-gray-700/50">
+        <div class="flex items-center space-x-3">
+          <svg class="w-8 h-8 text-purple-200" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 6.253V18M12 6.253C10.832 5.477 9.246 5 7.5 5C5.754 5 4.168 5.477 3 6.253V18C4.168 17.477 5.754 17 7.5 17C9.246 17 10.832 17.477 12 18M12 6.253C13.168 5.477 14.754 5 16.5 5C18.246 5 19.832 5.477 21 6.253V18C19.832 17.477 18.246 17 16.5 17C14.754 17 13.168 17.477 12 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h2 class="text-2xl font-bold text-white tracking-tight">
+            Form Peminjaman Buku
+          </h2>
+        </div>
+      </div>
+
+      <!-- Book Info Section -->
+      <div class="p-6 border-b border-gray-700/50">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 bg-purple-900/30 p-3 rounded-lg border border-purple-500/20">
+            <svg class="w-6 h-6 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 6.253V18M12 6.253C10.832 5.477 9.246 5 7.5 5C5.754 5 4.168 5.477 3 6.253V18C4.168 17.477 5.754 17 7.5 17C9.246 17 10.832 17.477 12 18M12 6.253C13.168 5.477 14.754 5 16.5 5C18.246 5 19.832 5.477 21 6.253V18C19.832 17.477 18.246 17 16.5 17C14.754 17 13.168 17.477 12 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-semibold text-white truncate">Filsafat Hidup</h3>
+            <p class="text-sm text-gray-400">oleh Aldos</p>
+            <div class="mt-2 flex flex-wrap gap-2">
+              <span class="px-2.5 py-1 bg-gray-700/50 text-xs font-medium text-purple-300 rounded-full border border-gray-600">Filsafat</span>
+              <span class="px-2.5 py-1 bg-gray-700/50 text-xs font-medium text-blue-300 rounded-full border border-gray-600">Rak LI-Z2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Content -->
+      <div class="p-6 space-y-6">
+        {{-- Notifications --}}
+        @if(flashMessages.has('notification'))
+          <div class="p-4 bg-emerald-900/30 border-l-4 border-emerald-400 text-emerald-100 rounded-r-lg">
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <p class="text-sm">{{ flashMessages.get('notification').message }}</p>
+            </div>
+          </div>
+        @endif
+        
+        @if(flashMessages.has('errors.general'))
+          <div class="p-4 bg-rose-900/30 border-l-4 border-rose-400 text-rose-100 rounded-r-lg">
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+              <p class="text-sm">{{ flashMessages.get('errors.general') }}</p>
+            </div>
+          </div>
+        @endif
+        
+        <form method="POST" action="{{ route('loans.store', { bookId: book.id }) }}" class="space-y-5">
+          {{ csrfField() }}
+
+          {{-- Loan Date --}}
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-300 flex items-center space-x-2">
+              <svg class="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Tanggal Pinjam</span>
+            </label>
+            <div class="relative">
+              <input
+                type="date"
+                name="loan_date"
+                class="w-full pl-11 pr-4 py-3 bg-gray-700/70 border {{ flashMessages.has('errors.loan_date') ? 'border-rose-500' : 'border-gray-600' }} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 transition-all duration-200"
+                min="{{ minDate }}"
+                value="{{ flashMessages.get('old.loan_date', defaultLoanDate) }}"
+                required
+              />
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            @if(flashMessages.has('errors.loan_date'))
+              <p class="mt-1 text-sm text-rose-400 flex items-center">
+                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                {{ flashMessages.get('errors.loan_date') }}
+              </p>
+            @endif
+          </div>
+
+          {{-- Return Date --}}
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-300 flex items-center space-x-2">
+              <svg class="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M15 7L13 5M15 7L13 9M15 7H7C5.89543 7 5 7.89543 5 9V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V11M11 5H9M11 5H17C18.1046 5 19 5.89543 19 7V9M11 5L9 7M9 7L11 9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Tanggal Kembali</span>
+            </label>
+            <div class="relative">
+              <input
+                type="date"
+                name="return_date"
+                class="w-full pl-11 pr-4 py-3 bg-gray-700/70 border {{ flashMessages.has('errors.return_date') ? 'border-rose-500' : 'border-gray-600' }} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 transition-all duration-200"
+                min="{{ minReturnDate }}"
+                value="{{ flashMessages.get('old.return_date', defaultReturnDate) }}"
+                required
+              />
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M15 7L13 5M15 7L13 9M15 7H7C5.89543 7 5 7.89543 5 9V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V11M11 5H9M11 5H17C18.1046 5 19 5.89543 19 7V9M11 5L9 7M9 7L11 9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            @if(flashMessages.has('errors.return_date'))
+              <p class="mt-1 text-sm text-rose-400 flex items-center">
+                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                {{ flashMessages.get('errors.return_date') }}
+              </p>
+            @endif
+          </div>
+
+          {{-- Submit Button --}}
+          <div class="pt-4">
+            <button 
+              type="submit" 
+              class="w-full flex items-center justify-center px-6 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-out group"
+            >
+              <span class="relative flex items-center">
+                <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M5 12H19M12 5L19 12L12 19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="relative z-10">Simpan Peminjaman</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></span>
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Smooth animations */
+  @keyframes buttonHover {
+    0% { transform: translateY(0); box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.1), 0 2px 4px -1px rgba(124, 58, 237, 0.06); }
+    50% { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.2), 0 4px 6px -2px rgba(124, 58, 237, 0.1); }
+    100% { transform: translateY(0); box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.1), 0 2px 4px -1px rgba(124, 58, 237, 0.06); }
+  }
+  
+  button[type="submit"]:hover {
+    animation: buttonHover 1s ease infinite;
+  }
+  
+  /* Focus states */
+  input:focus, select:focus {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+</style>
+
+@endslot
+@end

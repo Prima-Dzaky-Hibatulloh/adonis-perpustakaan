@@ -1,0 +1,178 @@
+@layout.app({ title: "Edit Buku" })
+
+@slot('meta')
+  <meta name="description" content="Halaman Edit Buku" />
+@endslot
+  
+@slot('content')
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Glass Card Container -->
+    <div class="glass-card bg-gray-800 bg-opacity-60 backdrop-blur-lg rounded-xl shadow-xl border border-gray-700 border-opacity-30 overflow-hidden">
+      <!-- Card Header -->
+      <div class="bg-gradient-to-r from-indigo-800 to-purple-800 px-6 py-4 border-b border-gray-700">
+        <div class="flex items-center space-x-3">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <h2 class="text-xl font-bold text-white">Edit Buku</h2>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="p-6">
+        <form method="POST" action="{{ route('books.update', [book.id]) }}">
+          {{ csrfField() }}
+          
+          <!-- Title Field -->
+          <div class="mb-6">
+            <label for="title" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Judul Buku <span class="text-rose-500 ml-1">*</span>
+            </label>
+            <input type="text" id="title" name="title" value="{{ book.title }}" 
+                   class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-gray-400"
+                   required />
+            @if(flashMessages.has('errors.title'))
+              <p class="mt-1 text-sm text-rose-500">{{ flashMessages.get('errors.title') }}</p>
+            @endif
+          </div>
+
+          <!-- Author Field -->
+          <div class="mb-6">
+            <label for="author" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Pengarang <span class="text-rose-500 ml-1">*</span>
+            </label>
+            <input type="text" id="author" name="author" value="{{ book.author }}"
+                   class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-gray-400"
+                   required />
+            @if(flashMessages.has('errors.author'))
+              <p class="mt-1 text-sm text-rose-500">{{ flashMessages.get('errors.author') }}</p>
+            @endif
+          </div>
+
+          <!-- Published Year Field -->
+          <div class="mb-6">
+            <label for="publishedYear" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Tahun Terbit <span class="text-rose-500 ml-1">*</span>
+            </label>
+            <input type="number" id="publishedYear" name="publishedYear" value="{{ book.publishedYear }}"
+                   class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-gray-400"
+                   required />
+            @if(flashMessages.has('errors.publishedYear'))
+              <p class="mt-1 text-sm text-rose-500">{{ flashMessages.get('errors.publishedYear') }}</p>
+            @endif
+          </div>
+
+          <!-- Category Select -->
+          <div class="mb-6">
+            <label for="categoryId" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+              Kategori <span class="text-rose-500 ml-1">*</span>
+            </label>
+            <select id="categoryId" name="categoryId"
+                    class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white">
+              @each(category in categories)
+                <option value="{{ category.id }}" {{ category.id === book.categoryId ? 'selected' : '' }}
+                        class="bg-gray-800 text-white">
+                  {{ category.name }}
+                </option>
+              @endeach
+            </select>
+          </div>
+
+          <!-- Shelf Select -->
+          <div class="mb-8">
+            <label for="shelfId" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+              Rak <span class="text-rose-500 ml-1">*</span>
+            </label>
+            <select id="shelfId" name="shelfId"
+                    class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white">
+              @each(shelf in shelves)
+                <option value="{{ shelf.id }}" {{ shelf.id === book.shelfId ? 'selected' : '' }}
+                        class="bg-gray-800 text-white">
+                  {{ shelf.code }} - {{ shelf.location }}
+                </option>
+              @endeach
+            </select>
+          </div>
+
+          <!-- Metadata Info -->
+          <div class="bg-gray-800 rounded-lg p-4 mb-8 border border-gray-700">
+            <div class="flex items-center space-x-2 mb-3">
+              <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h4 class="text-sm font-medium text-gray-300">Informasi Data</h4>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-400">
+              <div class="flex items-start">
+                <svg class="w-4 h-4 mt-0.5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <div>
+                  <p class="font-medium text-gray-300">Dibuat:</p>
+                  <p>{{ book.createdAt.setZone('Asia/Jakarta').toFormat('dd/MM/yyyy HH:mm') }} WIB</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <svg class="w-4 h-4 mt-0.5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p class="font-medium text-gray-300">Diperbarui:</p>
+                  <p>{{ book.updatedAt.setZone('Asia/Jakarta').toFormat('dd/MM/yyyy HH:mm') }} WIB</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+            <button type="submit" 
+                    class="flex items-center justify-center space-x-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium text-white transition-all shadow-md">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Perbarui Buku</span>
+            </button>
+            
+            <a href="{{ route('books.index') }}" 
+               class="flex items-center justify-center space-x-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium text-white transition-all shadow-md">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span>Kembali</span>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .glass-card {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  select option {
+    background-color: #1f2937;
+  }
+</style>
+
+@endslot
+@end

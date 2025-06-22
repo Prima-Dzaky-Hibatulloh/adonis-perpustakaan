@@ -1,0 +1,175 @@
+@layout.app({ title: "Edit Peminjaman Buku" })
+
+@slot('content')
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-xl mx-auto animate-fade-in-up">
+    <!-- Glass Card Container with Hover Effect -->
+    <div class="bg-gray-800/70 backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden border border-gray-700/40 transform transition-all duration-300 hover:shadow-purple-500/20 hover:border-purple-500/30">
+      <!-- Card Header with Pulse Animation -->
+      <div class="bg-gradient-to-r from-purple-800 to-indigo-800 px-6 py-4 border-b border-gray-700/40 animate-pulse-slow">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 rounded-lg bg-purple-600/30 backdrop-blur-sm transform transition-all duration-300 hover:rotate-12">
+            <svg class="w-6 h-6 text-purple-200" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-white flex items-center">
+            <span class="mr-2">Edit Peminjaman Buku</span>
+            <svg class="w-5 h-5 text-purple-300 animate-bounce-slow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </h2>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="p-6">
+        <form method="POST" action="{{ route('loans.update', { id: loan.id }) }}">
+          {{ csrfField() }}
+          
+          <!-- Pilih Buku with Floating Label Effect -->
+          <div class="mb-5 relative group">
+            <label class="block text-sm font-medium text-purple-200 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5 5.754 5 4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18c1.746 0 3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13c-1.168-.477-2.753-.747-4.5-.747-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              Buku
+            </label>
+            <select
+              name="book_id"
+              class="w-full px-4 py-2.5 bg-gray-700/60 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 transition-all duration-300 group-hover:border-purple-400/50 {{ flashMessages.has('errors.book_id') ? 'border-red-500' : '' }}"
+              required
+            >
+              <option value="" class="text-gray-400">-- Pilih Buku --</option>
+              @each(book in books)
+                <option value="{{ book.id }}" {{ loan.bookId === book.id ? 'selected' : '' }} class="bg-gray-800">
+                  {{ book.title }}
+                </option>
+              @endeach
+            </select>
+            @if(flashMessages.has('errors.book_id'))
+              <p class="mt-2 text-sm text-red-400 flex items-center">
+                <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ flashMessages.get('errors.book_id') }}
+              </p>
+            @endif
+          </div>
+
+          <!-- Tanggal Pinjam with Calendar Icon -->
+          <div class="mb-5 relative group">
+            <label class="block text-sm font-medium text-purple-200 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Tanggal Pinjam
+            </label>
+            <div class="relative">
+              <input
+                type="date"
+                name="loan_date"
+                class="w-full px-4 py-2.5 bg-gray-700/60 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 transition-all duration-300 group-hover:border-purple-400/50 {{ flashMessages.has('errors.loan_date') ? 'border-red-500' : '' }}"
+                value="{{ flashMessages.get('old.loan_date', loan.loanDate.toISODate()) }}"
+                min="{{ minDate }}"
+                required
+              />
+            </div>
+            @if(flashMessages.has('errors.loan_date'))
+              <p class="mt-2 text-sm text-red-400 flex items-center">
+                <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ flashMessages.get('errors.loan_date') }}
+              </p>
+            @endif
+          </div>
+
+          <!-- Tanggal Kembali with Return Icon -->
+          <div class="mb-6 relative group">
+            <label class="block text-sm font-medium text-purple-200 mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              Tanggal Kembali
+            </label>
+            <div class="relative">
+              <input
+                type="date"
+                name="return_date"
+                class="w-full px-4 py-2.5 bg-gray-700/60 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 transition-all duration-300 group-hover:border-purple-400/50 {{ flashMessages.has('errors.return_date') ? 'border-red-500' : '' }}"
+                value="{{ flashMessages.get('old.return_date', loan.returnDate?.toISODate()) }}"
+                min="{{ minReturnDate }}"
+                required
+              />
+            </div>
+            @if(flashMessages.has('errors.return_date'))
+              <p class="mt-2 text-sm text-red-400 flex items-center">
+                <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ flashMessages.get('errors.return_date') }}
+              </p>
+            @endif
+          </div>
+
+          <!-- Tombol with Hover Effects -->
+          <div class="flex justify-between mt-8">
+            <a href="{{ route('loans.index') }}" class="inline-flex items-center px-4 py-2.5 bg-gray-700/50 hover:bg-gray-600/70 text-white rounded-lg border border-gray-600 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 transform">
+              <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Batal
+            </a>
+            <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 transform group">
+              <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+              </svg>
+              <span class="transition-all duration-300 group-hover:tracking-wider">Simpan Perubahan</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes pulseSlow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  @keyframes bounceSlow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  .animate-pulse-slow {
+    animation: pulseSlow 3s ease-in-out infinite;
+  }
+  .animate-bounce-slow {
+    animation: bounceSlow 2s ease-in-out infinite;
+  }
+</style>
+@endslot
+@end

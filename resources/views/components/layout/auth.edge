@@ -1,0 +1,102 @@
+<!DOCTYPE html> 
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{{ title || "Adonis App" }}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #0f0f1a;
+        overflow: hidden;
+        color: #eee;
+      }
+
+      .glass {
+        background: rgba(34, 28, 53, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .glow-text {
+        text-shadow: 0 0 10px #b197fc, 0 0 20px #a088ff;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Particle Background -->
+    <div id="tsparticles" class="absolute inset-0 -z-10"></div>
+
+    <!-- Login Card -->
+    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+      <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden shadow-2xl border border-purple-500/10 glass">
+
+        <!-- Left: Image & Branding -->
+        <div class="relative hidden md:block">
+          <img
+            src="/images/register-bg.jpg"
+            class="w-full h-full object-cover brightness-110 contrast-125 saturate-125"
+            alt="Login Background"
+          />
+          <div class="absolute inset-0 bg-black/50 flex items-center justify-center p-6">
+          </div>
+        </div>
+
+        <!-- Right: Form Slot -->
+        <div class="flex items-center justify-center p-6 md:p-10">
+          <div class="w-full">
+            {{{ await $slots.content() }}}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- tsParticles Init -->
+    <script>
+      tsParticles.load("tsparticles", {
+        background: { color: "#0f0f1a" },
+        fpsLimit: 60,
+        particles: {
+          number: { value: 40, density: { enable: true, area: 800 } },
+          color: { value: "#a088ff" },
+          shape: { type: "circle" },
+          opacity: { value: 0.4 },
+          size: { value: { min: 1, max: 4 } },
+          move: {
+            enable: true,
+            speed: 1.2,
+            direction: "none",
+            outMode: "bounce"
+          }
+        },
+        interactivity: {
+          events: {
+            onHover: { enable: true, mode: "repulse" },
+            resize: true
+          },
+          modes: { repulse: { distance: 80, duration: 0.4 } }
+        },
+        detectRetina: true
+      });
+    </script>
+
+    <!-- Voice Welcome Script -->
+    <script>
+      window.onload = function () {
+        const message = new SpeechSynthesisUtterance("Selamat datang di Purwokerto Library, Silahkan Daftar Apabila Belum Mempunyai Akun. Jika Sudah, Langsung Login Saja");
+        message.lang = 'id-ID';
+        message.pitch = 1.2;
+        message.rate = 1;
+        window.speechSynthesis.speak(message);
+      };
+    </script>
+  </body>
+</html>
